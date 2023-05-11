@@ -9,91 +9,45 @@ title: "Home"
 
 ## Introduction
 
-In this article, we will explore the relationship between crime density and the socioeconomic status of San Francisco districts during the 2012-2016 period. By drawing demographic statistics for each district, we will calculate an index to represent the socioeconomic status. We will focus particularly on the Tenderloin district, as it represents a notable example of a low socioeconomic status combined with a high crime density.
+In this article, we will investigate the traffic accidents that have happened in New York City in the period between 2013 and 2022. We will be using a dataset from NYC Open Data to get information about vehicle collisions in New York, where we can see which types of vehicles were involved and where they happened. By using visualization techniques, we will illustrate where the zones with the highest chance of vehicle collisions are located, so that drivers can be mindful of these areas.
 
-## San Fransico, Tenderloin
+## Initial Analysis
+In order to analyse the collisions in New York we will use the *Motor Vehicle Collisions* dataset, which contains 1.99 million entries and is updated daily by the New York Police Department. It contains information about the date and time of the crash, the borough it happened in, which vehicles were involved and the reason for the crash. However, the dataset contains many errors of either missing information, wrongly written entries or indistinct types, so filtering the dataset for these errors was necessary in order to continue. 
 
-$$scaled\;crime\;count = \frac{crime\;count}{socioeconomic\;index}$$
-
-## Crime Density
-Crime numbers vary for each district, but not all districts have the same size and population density. Therefore, it's essential to consider crime density for these areas. Since San Francisco is densely populated, we will focus on the size of each district as the primary factor for this analysis, rather than incorporating population density.
-
-To calculate the size of each district, we used geodata from district shapefiles. We simplified the process by treating each district as a rectangle, with its edges determined by the minimum and maximum latitude and longitude values.
-
-With the area for each district calculated, we then determined crime density by dividing the total number of crimes in a given district by its area resulting to the following table, sorted by crime count.
-
-| Districts  | Crimes | Area (km^2) | Crime Density |
-|------------|--------|-------------|---------------|
-| Southern   | 221507 | 16.62       | 13328         |
-| Northern   | 167984 | 17.94       | 9364          |
-| Mission    | 159065 | 13.14       | 12105         |
-| Central    | 135864 | 10.74       | 12650         |
-| Bayview    | 109603 | 53.05       | 2066          |
-| Tenderloin | 103369 | 1.79        | 57748         |
-| Ingleside  | 99392  | 32.03       | 3103          |
-| Taraval    | 86292  | 46.34       | 1862          |
-| Park       | 66385  | 17.00       | 3905          |
-| Richmond   | 65291  | 29.77       | 2193          |
-
-Following our calculation of crime density, we have created a bar chart to better visualize the data. The chart clearly illustrates that the Tenderloin district has the highest crime density compared to the other districts. This striking difference emphasizes the need to further explore the factors contributing to crime rates in the city and particularly in the Tenderloin district.
+After the filtering was done, we compared the individual vehicle types as seen in the plot below. It is however immediately apparent that a few vehicle types have a huge overrepresentation compared to the rest of the types. This involves Sedan-type cars, SUVs and the vaguely defined "Passenger Vehicles", which all have above 100.000 entries. The fourth most common types is then Taxis, followed by Pick-up Trucks and Vans, but at this point the amount of incidents per vehicle types falls significantly. The least common type, School Buses, only have a few hundred entries. Due to the low amount of data for the less common vehicle types, we will instead focus only on the most common types, specifically those with 5000 entries or more
 
 <img src="/images/BarChart.png"  width="1000" height="400">
 
-## Socioeconomic Status
-San Francisco is well-known for its significant socioeconomic disparities between its districts, ranking high among other US cities in this regard. To measure these differences, we computed a socioeconomic index for each district, where a higher index represents a lower socioeconomic status.
+## Analysis of location
+After cleaning the dataset we did an analysis of which areas in New York are most afflicted by vehicle collisions. We did this using histogram plotting of both the latitude and longitude given in each entry. Since the different vehicle types have different amounts of data, we are mostly interested in the peaks of each vehicle type as those will indicate if the accidents happen in the same place.
 
-By examining [this report of demographic statistics](https://default.sfplanning.org/publications_reports/SF_NGBD_SocioEconomic_Profiles/2012-2016_ACS_Profile_Neighborhoods_Final.pdf) for each district in San Fransico , we derived rough yet valuable estimations of crucial factors that characterize the socioeconomic status of each district. In the following table, we have statistics about median household income and unemployment rates for each district:
+<img src="/images/plot_hist.png"  width="1000" height="200">
 
-| Districts  | Household Income | Unemployment Rate (%) |
-|------------|------------------|-----------------------|
-| Tenderloin | 23500            | 9                     |
-| Southern   | 40000            | 8                     |
-| Central    | 65000            | 5                     |
-| Mission    | 55000            | 6                     |
-| Northern   | 90000            | 4                     |
-| Park       | 75000            | 4                     |
-| Ingleside  | 60000            | 5                     |
-| Richmond   | 80000            | 4                     |
-| Bayview    | 45000            | 7                     |
-| Taraval    | 70000            | 4                     |
+As can be seen in the plot the Sedan and SUV collisions are spread out across New York, although an interesting thing to note is that the Taxi is centered around a certain location. This means that we can use this to track where the same peak is for the two other vehicle types.
 
-Additionally, we also have information about education and poverty rates of each district.
+With this information, we then decided to create heatmaps using `folium`, a python package for mapping data to geodata. Using the Taxi heatmap, we can find out where the largest concentration of accidents happen for Taxis, and infer that knowledge onto the other vehicle types considering the single peak of the Taxi histogram.
 
-| Districts  | Higher Education (%) | Poverty Rate (%) |
-|------------|----------------------|------------------|
-| Tenderloin | 10                   | 20               |
-| Southern   | 15                   | 16               |
-| Central    | 35                   | 12               |
-| Mission    | 25                   | 14               |
-| Northern   | 55                   | 8                |
-| Park       | 45                   | 10               |
-| Ingleside  | 30                   | 12               |
-| Richmond   | 50                   | 9                |
-| Bayview    | 20                   | 15               |
-| Taraval    | 40                   | 11               |
+[Link to Sedan Heatmap](/heatmaps/map_sedan.html)
 
-To calculate the index for each district, we normalized factors that positively influence the status and inverse normalized factors with a negative impact. Then, we applied this formula:
+[Link to SUV Heatmap](/heatmaps/map_suv.html)
 
-$$status = 0.4*In+0.2*Po+0.2*Ed+0.2*Un $$ 
+[Link to Taxi Heatmap](/heatmaps/map_taxi.html)
 
-with varying weights for each factor. The outcomes of our calculations are displayed on the below choropleth map.
+We can see in the Taxi heatmap that it is centered around Manhatten island, which means that the other types also are centered in this location. This is indeed the case for both Sedans and SUVs, which also have a cluster of incidents in Brooklyn. This would indicate that Southern Manhatten and Northeastern Brooklyn are the locations where most motor vehicle collisions happen.
 
-<img src="/images/Map.png"  width="1000" height="400">
 
-Upon examining the map, it becomes apparent that the Tenderloin district has the lowest socioeconomic status(biggest index) compared to the other districts.
+## Interactive plotting
+We will also illustrate the trends of the vehicle collisions over years, in order to see if there are interesting patterns. We do know that the Covid-19 has affected the amount of collisions, but we might be able to see patterns in the previous years, and maybe even during the pandemic. These illustrations will be made with Bokeh and its interactive plotting Rangetool, so that we can see how the amount of collisions per week changes over the years. Since the data curve will be very noisy, we will plot an additional line where we have applied a Savitzky–Golay filter in order to smooth the curve.
 
-## Results
-Now that we can see that Tenderloin is the district with the lowest socioeconomic status and highest relative crime rate in regards to the aforementioned index, we want to investigate whether there has been taken action against the high crime rate. We can figure this out through the data by plotting the crime rate in Tenderloin throughout the years.
+{% include bokeh_sedan.html %}
+Here we can see that the collisions that involve Sedan-type vehicles have declined over the years, even before the covid period. During this period there was a sharp decline in accidents, likely as a consequence of the lockdowns that occured. One thing to note is that there is very little data in the period from 2012 to early 2016. It is unknown why this is the case, as the other two types do not have the same problem.
 
-We will limit the years used in this plot to the same range used in the report, which is from 2012 to 2016. This plot will be made with Bokeh and it's interactive plotting Rangetool, so that we can see how the amount of crimes per week evolves over the years and so that we can see any possible trends. Since the data curve will be very noisy, we will plot an additional line where we have applied a Savitzky–Golay filter in order to smooth the curve.
+{% include bokeh_suv.html %}
+With the SUVs we can see that there was a positive trend towards the pandemic. During the pandemic however, it flucated between positive and negative trends, but is overall on a decline now.
 
-{% include interactive_small_tenderloin.html %}
+{% include bokeh_taxi.html %}
 
-Using this tool we can see that the overall trend is negative which indicates that even though Tenderloin is the district in San Fransico with the highest socioeconomic index, efforts are being made into reducing the amount of crimes in the district.
-
+soemthing that concludes this
 
 ## Conclusion
-
-In this article, we have studied the crime rates of each district in San Fransico in regards to their size, and found that Tenderloin is the district with the highest crime density. We then investigated the socioeconomic status of each district in San Fransico, and calculated an index that is indicative of this status. Through this index we found that Tenderloin was also the district with the lowest amount of socioeconomic status.
-
-We also investigated whether action had been taken to reduce the amount of crime in Tenderloin through interactive plotting, and we discovered that there is a negative trend in crime rates in Tenderloin, indicating that it is indeed the case.
+overall conclusion

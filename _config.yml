@@ -18,16 +18,16 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: The website of Tobias Munch, s183478
-email: s183478@student.dtu.dk
+title: Collision Hotspots in NYC
+# email: your-email@example.com, your-email@example.com
+#email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
-  This is the website for the student Tobias Christian Munch
-  at DTU. This is made as part of the course Social Data Analysis
-  and Visualization, both for exercises and eventually project work
+  Exam Project for 02806 Social Data Analysis and Visualization
+  Written by s183478, Tobias Christian Ancher Just Munch
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
-#twitter_username: jekyllrb
-github_username:  s183478
+# twitter_username: jekyllrb
+github_username:  https://s183478.github.io/
 
 # Build settings
 theme: minima
