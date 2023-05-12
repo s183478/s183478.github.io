@@ -35,7 +35,6 @@ With this information, we then decided to create heatmaps using `folium`, a pyth
 
 We can see in the Taxi heatmap that it is centered around Manhatten island, which means that the other types also are centered in this location. This is indeed the case for both Sedans and SUVs, which also have a cluster of incidents in Brooklyn. This would indicate that Southern Manhatten and Northeastern Brooklyn are the locations where most motor vehicle collisions happen.
 
-
 ## Interactive plotting
 We will also illustrate the trends of the vehicle collisions over years, in order to see if there are interesting patterns. We do know that the Covid-19 has affected the amount of collisions, but we might be able to see patterns in the previous years, and maybe even during the pandemic. These illustrations will be made with Bokeh and its interactive plotting Rangetool, so that we can see how the amount of collisions per week changes over the years. Since the data curve will be very noisy, we will plot an additional line where we have applied a Savitzky–Golay filter in order to smooth the curve.
 
@@ -47,7 +46,8 @@ With the SUVs we can see that there was a positive trend towards the pandemic. D
 
 {% include bokeh_taxi.html %}
 
-soemthing that concludes this
+The graph for the Taxis does not fluctuate much in the period before the pandemic, although there is a slight drop in cases at the beginning of 2016. There are no similar patterns in the other types, so it is unknown what causes this.
+
 
 ## Conclusion
-overall conclusion
+Using the Motor Vehicle Collisions dataset we were able to investigate which locations in New York were most likely to have collisions. We found that Southern Manhatten was a hotspot for most vehicle types, and for Sedans in particular Northeastern Brooklyn was also a hotspot. In addition, we also investigated the collisions over the years, and found that some vehicle types had a negative trend and others had a positive, but in general all were affected by the recent pandemic.
